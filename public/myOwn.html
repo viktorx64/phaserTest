@@ -31,6 +31,10 @@
     }
 };
 
+//varibles for score
+var score = 0;
+var scoreText;
+
 var game = new Phaser.Game(config);
 
 function preload ()
@@ -53,6 +57,7 @@ function create ()
 {
     //create sprites
     this.add.image(400, 300, 'sky');
+    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
     //add these images to static/non passable
     platforms = this.physics.add.staticGroup();
 
@@ -139,6 +144,9 @@ function update ()
 function collectStar (player, star)
 {
     star.disableBody(true, true);
+    //add points
+    score += 10;
+    scoreText.setText('Score: ' + score);
 }
 </script>
 
