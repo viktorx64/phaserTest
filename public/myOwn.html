@@ -2,7 +2,7 @@
 <html lang="en"> 
 <head> 
     <meta charset="UTF-8" />
-    <title>Making your first Phaser 3 Game - Part 1</title>
+    <title>Bumbi björn</title>
     <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
     <style type="text/css">
         body {
@@ -139,14 +139,49 @@ function update ()
     this.physics.add.collider(stars, platforms);
     //add collect star
     this.physics.add.overlap(player, stars, collectStar, null, this);
-}
 
+    //bombs
+    bombs = this.physics.add.group();
+
+    this.physics.add.collider(bombs, platforms);
+
+    this.physics.add.collider(player, bombs, hitBomb, null, this);
+}
+//makes you happy
 function collectStar (player, star)
 {
     star.disableBody(true, true);
     //add points
     score += 10;
     scoreText.setText('Score: ' + score);
+    //now we make the game infinite
+    if (stars.countActive(true) === 0)
+    {
+        stars.children.iterate(function (child) {
+
+            child.enableBody(true, child.x, 0, true, true);
+
+        });
+
+        var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+
+        var bomb = bombs.create(x, 16, 'bomb');
+        bomb.setBounce(1);
+        bomb.setCollideWorldBounds(true);
+        bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+
+    }
+}
+//makes you sad
+function hitBomb (player, bomb)
+{
+    this.physics.pause();
+
+    player.setTint(0xff0000);
+
+    player.anims.play('turn');
+
+    gameOver = true;
 }
 </script>
 
